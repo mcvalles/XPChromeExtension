@@ -1,0 +1,46 @@
+{
+    "name": "xp-extension",
+    "description": "Chrome Extension for XP",
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "icons": {
+        "16": "x-icon.png",
+        "48": "x-icon.png",
+        "128": "x-icon.png"
+    },
+    "action":{
+        "default_icon":{
+            "16": "x-icon.png",
+            "24": "x-icon.png",
+            "32": "x-icon.png"
+        },
+        "default_title": "Email Template Extension",
+        "default_popup":"popup.html"
+    },
+    "options_page": "Options Page//options.html",   
+    "permissions": [
+        "background",
+        "storage",
+        "tabs",
+        "identity", 
+        "identity.email"   
+    ],
+    "background":{
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://xp-cavalry.x-team.com/profile/*"],
+            "css": ["Modal//modal.css"],
+            "all_frames": true,
+            "run_at": "document_end",
+            "js": ["Modal//modal.js"]
+        },
+        {
+            "matches": ["https://xp-cavalry.x-team.com/profile/*"],
+            "all_frames": true,
+            "run_at": "document_end",
+            "js": ["Main Logic//backend.js"]
+        }
+    ]
+}

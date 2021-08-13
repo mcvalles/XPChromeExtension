@@ -1,0 +1,53 @@
+  /* The Modal (background) */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #000000;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid rgb(105, 105, 105);
+    width: 50%;
+  }
+
+  /*Separate text from buttons in Modal Content*/
+  .modal-content p{
+    margin-top: 10px;
+  }
+
+  /*List Buttons in a single column*/
+  .btn-group button {
+    color: hsla(0,0%,100%,.85);
+    background: transparent;
+    border: 1px solid #434343;
+    color: white; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    width: 80%; /* Set a width if needed */
+    margin-left: 10%;
+    display: flex; 
+    justify-content: center; }
+  
+  /*Change button border color on hover*/
+ .btn-group button:hover {
+   border-color: #177ddc;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 18px;
+    font-weight: bold;
+  }
