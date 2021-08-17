@@ -8,28 +8,27 @@
         "48": "x-icon.png",
         "128": "x-icon.png"
     },
-    "action":{
-        "default_icon":{
+    "action": {
+        "default_icon": {
             "16": "x-icon.png",
             "24": "x-icon.png",
             "32": "x-icon.png"
         },
         "default_title": "Email Template Extension",
-        "default_popup":"popup.html"
+        "default_popup": "popup.html"
     },
-    "options_page": "Options Page//options.html",   
+    "options_page": "Options Page//options.html",
     "permissions": [
         "background",
         "storage",
         "tabs",
-        "identity", 
-        "identity.email"   
+        "identity",
+        "identity.email"
     ],
-    "background":{
+    "background": {
         "service_worker": "background.js"
     },
-    "content_scripts": [
-        {
+    "content_scripts": [{
             "matches": ["https://xp-cavalry.x-team.com/profile/*"],
             "css": ["Modal//modal.css"],
             "all_frames": true,
