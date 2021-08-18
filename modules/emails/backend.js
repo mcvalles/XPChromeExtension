@@ -39,9 +39,6 @@ function afterWindowLoaded() {
    chrome.runtime.sendMessage(
        { 
            message: 'getTemplates',
-           data: {
-               emailKey: 'outreachEmailKey'
-           }
         }, (res) => console.log(`message: ${JSON.stringify(res)}`))
 
     //Open Modal when email element gets clicked
