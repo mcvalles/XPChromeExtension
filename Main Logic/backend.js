@@ -36,6 +36,14 @@ for (var i = 0; i < modalButtons.length; i++) {
 
 //Functions --------------------------------------------------------------------------------------
 function afterWindowLoaded() {
+   chrome.runtime.sendMessage(
+       { 
+           message: 'getTemplates',
+           data: {
+               emailKey: 'outreachEmailKey'
+           }
+        }, (res) => console.log(`message: ${JSON.stringify(res)}`))
+
     //Open Modal when email element gets clicked
     //Even though it is being called after the document is ready, rendering takes so long the html element does not yet exist when the script is being called
     //TODO: Find a better way to solve this. Currently getting by with a timeout.
