@@ -1,32 +1,18 @@
-//Work in progress - Now being used for testing purposes only
+import Emails from '/modules/emails/background.js'
 
-function handleMessage (message, sender, sendResponse) {
-        console.log(`got message: ${JSON.stringify(message, 0, 2)}`)
-        messageResponses[message.message](message, sendResponse)
+const imports = [Emails]
 
-        return true
+function registerListeners () {
+        imports
+        .reduce((p, c) => {
+                console.log(`processing listeners from ${c.module}`)
+                p = p.concat(Object.entries(c.listeners))
+                return p
+        }, [])
+        .forEach(listener => {
+                console.log(`adding listener ${listener[0]}`)
+                chrome.runtime.onMessage.addListener(listener[1])
+        })
 }
 
-const messageResponses = {
-        getTemplates,
-}
-
-function getTemplates (message, cb) {
-        chrome.storage.sync.get(["save"], (res) => {
-                console.log(`retrieved: ${JSON.stringify(res, 0, 2)}`)
-                cb(res.save)
-            })
-}
-      
-chrome.runtime.onMessage.addListener(handleMessage)
-
-chrome.storage.sync.get(null, function callback(items) {
-        console.log(items)
-});
-
-var emailSubject = "";
-var test = "eml_outreach_subj"
-chrome.storage.sync.get(["save"], (res) => {
-        emailSubject = res.save[test] ?? ""
-        console.log(emailSubject);
-})
+registerListeners()
