@@ -14,16 +14,16 @@
             "24": "x-icon.png",
             "32": "x-icon.png"
         },
-        "default_title": "Email Template Extension",
-        "default_popup": "popup.html"
+        "default_title": "Email Template Extension"
     },
-    "options_page": "options/options.html",
+    "options_page": "modules/emails/Options Page/options.html",
     "permissions": [
         "background",
         "storage",
         "tabs",
         "identity",
-        "identity.email"
+        "identity.email",
+        "clipboardWrite"
     ],
     "background": {
         "service_worker": "background.js",

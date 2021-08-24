@@ -10,6 +10,33 @@ if (document.querySelector("#emailModal") == null) {
     divEmailModal.innerHTML = `
     <div class="modal-content">
         <span class="close">&times;</span>
+        <p>Include the following information if your template uses it:</p>
+        <div class="input-group">
+            <div>
+                <label>Interviewer Name</label>
+                <input type="text" id="interviewer" name="interviewer">
+            </div>
+            <div>
+                <label>Interviewer Calendly</label>
+                <input type="text" id="calendlyLink" name="calendly">
+            </div>
+            <div>
+                <label>Referral Name</label>
+                <input type="text" id="referralName" name="referral">
+            </div>
+            <div>
+                <label>Role Name</label>
+                <input type="text" id="role" name="role">
+            </div>
+            <div>
+                <label>Previous FT</label>
+                <input type="text" id="previousContact" name="contactedBy">
+            </div>
+            <div>
+                <label>Tech List</label>
+                <input type="text" id="techList" name="techs">
+            </div>
+        </div>
         <p>Copy to your clipboard any of the following email templates:</p>
         <div class="btn-group">
             <button id="eml_outreach" type="button" name="modalButton"><span>Outreach - Interview Request</span></button>

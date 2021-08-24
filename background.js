@@ -1,4 +1,4 @@
-import Emails from '/modules/emails/background.js'
+import Emails from '/modules/emails/emails.js'
 
 const imports = [Emails]
 

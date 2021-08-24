@@ -10,6 +10,7 @@ const rejectionEmailKey = "tmp_rejection";
 const acceptanceSubjectKey = "eml_acceptance_subj";
 const acceptanceEmailKey = "tmp_acceptance";
 const pasteContentMessage = "Paste email template from clipboard using Ctrl+V."
+var templates;
 //Event Listeners --------------------------------------------------------------------------------  
 
 //On Document Ready
@@ -36,14 +37,13 @@ for (var i = 0; i < modalButtons.length; i++) {
 
 //Functions --------------------------------------------------------------------------------------
 function afterWindowLoaded() {
-   chrome.runtime.sendMessage(
-       { 
-           message: 'getTemplates',
-        }, (res) => console.log(`message: ${JSON.stringify(res)}`))
+    chrome.runtime.sendMessage({
+        message: 'getTemplates',
+    }, (res) => {
+        templates = res;
+        console.log(`message: ${JSON.stringify(res)}`)
+    })
 
-    //Open Modal when email element gets clicked
-    //Even though it is being called after the document is ready, rendering takes so long the html element does not yet exist when the script is being called
-    //TODO: Find a better way to solve this. Currently getting by with a timeout.
     setTimeout(function () {
         document.querySelector(".Profile-module--email--1WtUw a").addEventListener('click', OpenModal)
     }, 5000);
@@ -103,27 +103,58 @@ function SendTemplateEmail() {
 }
 //Email Template Getters--------------------------------------------------------------------------
 function GetEmailBody(emailkey) {
-    var emailBody = "";
-    chrome.storage.sync.get(["save"], (res) => {
-        //This line is not being excecuted - currently working on figuring this out
-        //Email Body not being retrieved (but it is correctly saved)
-        emailBody = res.save[emailkey] ?? ""
-    })
+    var emailBody = templates[emailkey] ?? "";
     if (emailBody) {
         emailBody = emailBody.replace("[candidate]", GetCandidateName());
         emailBody = emailBody.replace("[calendlyLink]", GetCalendlyLink());
+        emailBody = emailBody.replace("[myCalendly]", GetMyCalendlyLink());
+        emailBody = emailBody.replace("[interviewer]", GetInterviewerName());
+        emailBody = emailBody.replace("[referral]", GetReferralName());
+        emailBody = emailBody.replace("[role]", GetRoleName());
+        emailBody = emailBody.replace("[techs]", GetTechList());
+        emailBody = emailBody.replace("[faq]", GetFaq());
+        emailBody = emailBody.replace(/\n/g, "<br />"); //add breaks where new lines are
     }
     return emailBody;
 }
 
+function GetCalendlyLink() {
+    var link = document.getElementById("calendlyLink").value ?? ""
+    var calendly = `<a href="${link}">Calendly link</a>`
+    return calendly;
+}
+
+function GetInterviewerName() {
+    return document.getElementById("interviewer").value ?? "";
+}
+
+function GetReferralName() {
+    return document.getElementById("referralName").value ?? "";
+}
+
+function GetRoleName() {
+    return document.getElementById("role").value ?? "";
+}
+
+function GetTechList() {
+    return document.getElementById("techList").value ?? "";
+}
+
 function GetEmailSubject(subjectKey) {
-    var emailSubject = "";
-    chrome.storage.sync.get(["save"], (res) => {
-        //This line is not being excecuted - currently working on figuring this out
-        //Email Subject not being retrieved (but it is correctly saved)
-        emailSubject = res.save[subjectKey] ?? ""
-    })
+    var emailSubject = templates[subjectKey] ?? "";
     return emailSubject;
+}
+
+function GetFaq() {
+    var link = templates["faq"] ?? "";
+    var faq = `<a href="${link}">FAQ</a>`
+    return faq;
+}
+
+function GetMyCalendlyLink() {
+    var link = templates["myCalendly"] ?? "";
+    var myCalendly = `<a href="${link}">my Calendly</a>`
+    return myCalendly;
 }
 
 function GetCandidateName() {
