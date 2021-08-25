@@ -15,7 +15,7 @@ function handleMessage (message, sender, sendResponse) {
     return true
 }
 
-export default ({
+export default (Core) => ({
     module: 'Emails',
     listeners: {
         handleMessage,

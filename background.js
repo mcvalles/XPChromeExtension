@@ -1,6 +1,7 @@
+import Core from '/core/core.js'
 import Emails from '/modules/emails/emails.js'
 
-const imports = [Emails]
+const imports = [Emails(Core)]
 
 function registerListeners () {
         imports
