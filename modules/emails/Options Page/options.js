@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
         emailTemplates[i].addEventListener('change', saveEmailTemplate)
     }
 
+    //Glossary Toggle
+    document.getElementById('collapsible').addEventListener('click', displayGlossary)
+
     //Calendly link OnChange
     document.getElementById('my_calendly').addEventListener('change', saveCalendly)
 
@@ -72,6 +75,17 @@ function saveEmailTemplate(){
     chrome.storage.sync.set({save}, ()=>{
         console.log(`${emailType} is set to ${save[emailType]}`)
     })
+}
+
+//Toggle Glossary  -----------------------------------------------------------
+function displayGlossary(){
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+        content.style.display = "none";
+    } else {
+         content.style.display = "block";
+    }
 }
 
 //Tab Menu -------------------------------------------------------------------

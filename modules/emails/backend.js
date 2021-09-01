@@ -7,9 +7,18 @@ const interviewSubjectKey = "eml_interview_subj";
 const interviewEmailKey = "tmp_interview";
 const rejectionSubjectKey = "eml_rejection_subj";
 const rejectionEmailKey = "tmp_rejection";
+const onHoldSubjectKey = "eml_onhold_subj";
+const onHoldEmailKey = "tmp_onhold";
 const acceptanceSubjectKey = "eml_acceptance_subj";
 const acceptanceEmailKey = "tmp_acceptance";
+const shortlistSubjectKey = "eml_shortlist_subj";
+const shortlistEmailKey = "tmp_shortlist";
+const updateSubjectKey = "eml_update_subj";
+const updateEmailKey = "tmp_update";
 const pasteContentMessage = "Paste email template from clipboard using Ctrl+V."
+const confirmNote = "Add default note documenting the email that got sent?"
+var noteText = "Reached out through an [emailtype] email."
+var alternativeNoteText = "[emailtype] email sent."
 var templates;
 //Event Listeners --------------------------------------------------------------------------------  
 
@@ -57,10 +66,17 @@ function OpenModal(e) {
     }
 }
 
-function CloseModal() {
+function CloseModal(note) {
     if (document.querySelector("#emailModal") != null) {
         var modal = document.getElementById("emailModal");
         modal.style.display = "none";
+    }
+
+    if(note.length > 0){
+        var emailNote = confirm(confirmNote);
+        if (emailNote == true) {
+                AddEmailNote(note);
+        }
     }
 }
 
@@ -72,26 +88,48 @@ function SendBlankEmail() {
 function SendTemplateEmail() {
     var subjectKey;
     var emailKey;
-    switch (this.id) {
+    var note;
+    var emailType = this.id;
+    switch (emailType) {
         case "eml_outreach":
             subjectKey = outreachSubjectKey;
             emailKey = outreachEmailKey;
+            note = noteText.replace("[emailtype]","outreach");
             break;
         case "eml_referral":
             subjectKey = referralSubjectKey;
             emailKey = referralEmailKey;
+            note = noteText.replace("[emailtype]","referral");
             break;
         case "eml_interview":
             subjectKey = interviewSubjectKey;
-            emailKey = interviewEmailKey
+            emailKey = interviewEmailKey;
+            note = noteText.replace("[emailtype]","interview request");
             break;
         case "eml_rejection":
             subjectKey = rejectionSubjectKey;
             emailKey = rejectionEmailKey;
+            note = alternativeNoteText.replace("[emailtype]","Rejection");
             break;
+        case "eml_onhold":
+            subjectKey = onHoldSubjectKey;
+            emailKey = onHoldEmailKey;
+            note = alternativeNoteText.replace("[emailtype]","Role on hold");
+            break;            
         case "eml_acceptance":
             subjectKey = acceptanceSubjectKey;
             emailKey = acceptanceEmailKey;
+            note = alternativeNoteText.replace("[emailtype]","Acceptance");
+            break;
+        case "eml_shortlist":
+            subjectKey = shortlistSubjectKey;
+            emailKey = shortlistEmailKey;
+            note = alternativeNoteText.replace("[emailtype]","Shortlisted for role");
+            break;
+        case "eml_update":
+            subjectKey = updateSubjectKey;
+            emailKey = updateEmailKey;
+            note = alternativeNoteText.replace("[emailtype]","Role update");
             break;
     }
 
@@ -99,7 +137,7 @@ function SendTemplateEmail() {
     var content = GetEmailBody(emailKey);
     CopyRichText(content); //Copy Email Template to Clipboard
     window.location.href = GetEmailLink() + "?subject=" + subject + "&body=" + pasteContentMessage;
-    CloseModal();
+    CloseModal(note);
 }
 //Email Template Getters--------------------------------------------------------------------------
 function GetEmailBody(emailkey) {
@@ -133,7 +171,7 @@ function GetReferralName() {
 }
 
 function GetRoleName() {
-    return document.getElementById("role").value ?? "";
+    return document.getElementById("role-name").value ?? "";
 }
 
 function GetTechList() {
@@ -175,4 +213,27 @@ function CopyRichText(text) {
     document.addEventListener('copy', listener);
     document.execCommand('copy');
     document.removeEventListener('copy', listener);
+}
+
+function setNativeValue(element, value) {
+    const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
+    const prototype = Object.getPrototypeOf(element);
+    const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
+  
+    if (valueSetter && valueSetter !== prototypeValueSetter) {
+      prototypeValueSetter.call(element, value);
+    } else {
+      valueSetter.call(element, value);
+    }
+}
+
+function AddEmailNote(noteContent){
+    document.getElementById("notes").nextSibling.querySelector('.ant-btn').click(); //click on create note  
+    //setNativeValue(textarea, noteContent);
+    //textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    document.getElementById("body").focus();
+    document.getElementById("body").click();
+    document.getElementById("body").innerHTML = noteContent;
+    document.getElementById("body").value = noteContent;
+    document.querySelectorAll("button[type=submit]")[1].click(); //save note 
 }

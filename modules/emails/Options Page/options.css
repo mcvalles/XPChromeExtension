@@ -77,4 +77,28 @@ input:focus {
 label{
     display: inline-block;
     width: 6%;
-  }
+}
+
+.collapsible {
+    background-color:   rgb(29, 29, 29);
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    line-height: 0;
+}
+  
+.active, .collapsible:hover {
+    color: #177ddc;
+    background: rgb(29, 29, 29)
+}
+  
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    font-size: 14px;
+}
