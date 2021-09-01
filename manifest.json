@@ -16,7 +16,7 @@
         },
         "default_title": "Email Template Extension"
     },
-    "options_page": "modules/emails/Options Page/options.html",
+    "options_page": "options/options.html",
     "permissions": [
         "background",
         "storage",
