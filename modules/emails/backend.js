@@ -11,8 +11,8 @@ const onHoldSubjectKey = "eml_onhold_subj";
 const onHoldEmailKey = "tmp_onhold";
 const acceptanceSubjectKey = "eml_acceptance_subj";
 const acceptanceEmailKey = "tmp_acceptance";
-const shorlistSubjectKey = "eml_shorlist_subj";
-const shorlistEmailKey = "tmp_shorlist";
+const shortlistSubjectKey = "eml_shortlist_subj";
+const shortlistEmailKey = "tmp_shortlist";
 const updateSubjectKey = "eml_update_subj";
 const updateEmailKey = "tmp_update";
 const pasteContentMessage = "Paste email template from clipboard using Ctrl+V."
@@ -171,7 +171,7 @@ function GetReferralName() {
 }
 
 function GetRoleName() {
-    return document.getElementById("role").value ?? "";
+    return document.getElementById("role-name").value ?? "";
 }
 
 function GetTechList() {

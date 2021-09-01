@@ -26,7 +26,7 @@ if (document.querySelector("#emailModal") == null) {
             </div>
             <div>
                 <label>Role Name</label>
-                <input type="text" id="role" name="role">
+                <input type="text" id="role-name" name="role">
             </div>
             <div>
                 <label>Previous FT</label>
@@ -43,7 +43,10 @@ if (document.querySelector("#emailModal") == null) {
             <button id="eml_referral" type="button" name="modalButton"><span>Referral - Interview Request</span></button>
             <button id="eml_interview" type="button" name="modalButton"><span>Expert Meeting - Interview Request</span></button>
             <button id="eml_rejection" type="button" name="modalButton"><span>Rejection - Candidate Feedback</span></button> 
+            <button id="eml_onhold" type="button" name="modalButton"><span>Role on Hold</span></button> 
             <button id="eml_acceptance" type="button" name="modalButton"><span>Acceptance - Candidate Feedback</span></button> 
+            <button id="eml_shortlist" type="button" name="modalButton"><span>Previously Vetted</span></button> 
+            <button id="eml_update" type="button" name="modalButton"><span>Application Update</span></button> 
         </div>
         <p>Or keep it simple:</p>
         <div class="btn-group">
