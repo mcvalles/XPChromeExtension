@@ -256,27 +256,5 @@ function AddEmailNote(noteContent){
         xhr.setRequestHeader("authorization", authorID);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(note);
-
-        var data = JSON.stringify({
-            "body": noteContent,
-            "profile": profileID
-          });
-          
-          var xhr = new XMLHttpRequest();
-          xhr.withCredentials = true;
-          
-          xhr.addEventListener("readystatechange", function() {
-            if(this.readyState === 4) {
-              console.log(this.responseText);
-            }
-          });
-          
-          xhr.open("POST", "https://jobs-api.x-team.com/notes");
-          xhr.setRequestHeader("authority", "jobs-api.x-team.com");
-          xhr.setRequestHeader("authorization", authorID);
-          xhr.setRequestHeader("referer", "https://xp-cavalry.x-team.com/");
-          xhr.setRequestHeader("Content-Type", "application/json");
-          
-          xhr.send(data);
     }
 }
