@@ -17,3 +17,19 @@ function registerListeners () {
 }
 
 registerListeners()
+
+// Core.Notes.get
+// ('Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQ3NSwiaWF0IjoxNjM0NzcwMDQzLCJleHAiOjE2MzczNjIwNDN9.cEfqUw1rq45m_z3AD4H4neqrJlYY3DY-ZDfVhYJxPUg')
+// ('/?profile=241019&populate[]=tags')
+// ()
+// (console.log)
+
+// Core.Notes.post
+// ('Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQ3NSwiaWF0IjoxNjM0NzcwMDQzLCJleHAiOjE2MzczNjIwNDN9.cEfqUw1rq45m_z3AD4H4neqrJlYY3DY-ZDfVhYJxPUg')
+// ()
+// (JSON.stringify({
+//         body: `test note ${Date.now()} from extension`,
+//         tags: [77],
+//         profile: '241019'
+// }))
+// (console.log)
