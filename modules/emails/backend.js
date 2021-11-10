@@ -20,20 +20,25 @@ const confirmNote = "Add default note documenting the email that got sent?"
 var noteText = "Reached out through an [emailtype] email."
 var alternativeNoteText = "[emailtype] email sent."
 var templates;
+
 //Event Listeners --------------------------------------------------------------------------------  
 
-//On Document Ready
-if (document.readyState !== 'complete') {
-    window.addEventListener('load', afterWindowLoaded);
-} else {
-    afterWindowLoaded;
-}
+const emailObserver = new MutationObserver(mutations => {
+    if (document.querySelector("div.Profile-module--email--1WtUw") != null) {
+        afterEmailLoaded();
+        emailObserver.disconnect();
+    }
+});
+
+var profilePage = document.querySelector('body'); 
+emailObserver.observe(profilePage, {
+    subtree:true,
+    childlist:true,
+    attributes:true
+});
 
 //When the user clicks on <span> (x), close the modal
 document.querySelector(".close").addEventListener('click', CloseModal);
-
-//When the user clicks anywhere outside of the modal, close it
-//window.addEventListener('click', CloseModal);
 
 //Send Blank Email
 document.getElementById("blankEmail").addEventListener('click', SendBlankEmail);
@@ -45,7 +50,7 @@ for (var i = 0; i < modalButtons.length; i++) {
 }
 
 //Functions --------------------------------------------------------------------------------------
-function afterWindowLoaded() {
+function afterEmailLoaded() {
     chrome.runtime.sendMessage({
         message: 'getTemplates',
     }, (res) => {
@@ -53,9 +58,9 @@ function afterWindowLoaded() {
         console.log(`message: ${JSON.stringify(res)}`)
     })
 
-    setTimeout(function () {
-        document.querySelector(".Profile-module--email--1WtUw a").addEventListener('click', OpenModal)
-    }, 5000);
+    document.querySelector(".Profile-module--email--1WtUw a").addEventListener('click', OpenModal)
+    //When the user clicks anywhere outside of the modal, close it
+    window.addEventListener('click', CloseModal);
 }
 
 function OpenModal(e) {
@@ -66,17 +71,10 @@ function OpenModal(e) {
     }
 }
 
-function CloseModal(note) {
+function CloseModal() {
     if (document.querySelector("#emailModal") != null) {
         var modal = document.getElementById("emailModal");
         modal.style.display = "none";
-    }
-
-    if(note.length > 0){
-        var emailNote = confirm(confirmNote);
-        if (emailNote == true) {
-                AddEmailNote(note);
-        }
     }
 }
 
@@ -136,9 +134,11 @@ function SendTemplateEmail() {
     var subject = GetEmailSubject(subjectKey);
     var content = GetEmailBody(emailKey);
     CopyRichText(content); //Copy Email Template to Clipboard
+    AddEmailNote(note);
     window.location.href = GetEmailLink() + "?subject=" + subject + "&body=" + pasteContentMessage;
-    CloseModal(note);
+    CloseModal();
 }
+
 //Email Template Getters--------------------------------------------------------------------------
 function GetEmailBody(emailkey) {
     var emailBody = templates[emailkey] ?? "";
@@ -225,15 +225,58 @@ function setNativeValue(element, value) {
     } else {
       valueSetter.call(element, value);
     }
-}
+} 
+ 
 
 function AddEmailNote(noteContent){
-    document.getElementById("notes").nextSibling.querySelector('.ant-btn').click(); //click on create note  
-    //setNativeValue(textarea, noteContent);
-    //textarea.dispatchEvent(new Event('input', { bubbles: true }));
-    document.getElementById("body").focus();
-    document.getElementById("body").click();
-    document.getElementById("body").innerHTML = noteContent;
-    document.getElementById("body").value = noteContent;
-    document.querySelectorAll("button[type=submit]")[1].click(); //save note 
+    if(noteContent.length > 0){
+        //document.getElementById("notes").nextSibling.querySelector('.ant-btn').click(); //click on create note  
+        //document.getElementById("body").focus();
+        //document.getElementById("body").click();
+        //document.getElementById("body").write(noteContent)
+        //document.getElementById("body").value = noteContent;
+        
+        //TODO: This is my user ID, need to update with a specific profile for automation purposes
+        var authorID = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjA2OTEsImlhdCI6MTYzNTM0OTgzMSwiZXhwIjoxNjM3OTQxODMxfQ.OwgQv0wvAsM-u2XbCaYYEWp7MdCKIEBkhcDdmh5oRxQ"
+        //TODO: This is a test profile (Test First Name Test Last Name), need to update with the users specific ID but it is not included on the page.  
+        var profileID = "241019" 
+        var note = JSON.stringify({
+            "body": noteContent,
+            "profile": profileID
+        });
+        
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;     
+        xhr.addEventListener("readystatechange", function() {
+            if(this.readyState === 4) {
+            console.log(this.responseText);
+            }
+        });      
+        xhr.open("POST", "https://jobs-api.x-team.com/notes");
+        xhr.setRequestHeader("authorization", authorID);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(note);
+
+        var data = JSON.stringify({
+            "body": noteContent,
+            "profile": profileID
+          });
+          
+          var xhr = new XMLHttpRequest();
+          xhr.withCredentials = true;
+          
+          xhr.addEventListener("readystatechange", function() {
+            if(this.readyState === 4) {
+              console.log(this.responseText);
+            }
+          });
+          
+          xhr.open("POST", "https://jobs-api.x-team.com/notes");
+          xhr.setRequestHeader("authority", "jobs-api.x-team.com");
+          xhr.setRequestHeader("authorization", authorID);
+          xhr.setRequestHeader("referer", "https://xp-cavalry.x-team.com/");
+          xhr.setRequestHeader("Content-Type", "application/json");
+          
+          xhr.send(data);
+    }
 }
