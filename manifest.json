@@ -25,6 +25,9 @@
         "identity.email",
         "clipboardWrite"
     ],
+    "host_permissions": [
+        "https://*.x-team.com/*"
+    ],
     "background": {
         "service_worker": "background.js",
         "type": "module"
