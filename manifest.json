@@ -34,16 +34,16 @@
     },
     "content_scripts": [{
             "matches": ["https://xp-cavalry.x-team.com/profile/*"],
-            "css": ["modules/emails/Modal//modal.css"],
+            "css": ["modules/emails/modal//modal.css"],
             "all_frames": true,
             "run_at": "document_end",
-            "js": ["modules/emails/Modal//modal.js"]
+            "js": ["modules/emails/modal//modal.js"]
         },
         {
             "matches": ["https://xp-cavalry.x-team.com/profile/*"],
             "all_frames": true,
             "run_at": "document_end",
-            "js": ["modules/emails/backend.js"]
+            "js": ["modules/emails/inject.js"]
         },
         {
             "matches": ["https://xp-cavalry.x-team.com/*"],

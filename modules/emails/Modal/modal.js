@@ -1,13 +1,13 @@
 //Inject HTML and necesary code-------------------------------------------------------------------
 //Check if HTML was already injected on tab
 if (document.querySelector("#emailModal") == null) {
-    var divEmailModal = document.createElement("div");
-    //Email Modal HTML
-    var divEmailModal = document.createElement("div");
-    document.body.appendChild(divEmailModal);
-    divEmailModal.id = "emailModal";
-    divEmailModal.classList = "modal";
-    divEmailModal.innerHTML = `
+  var divEmailModal = document.createElement("div");
+  //Email Modal HTML
+  var divEmailModal = document.createElement("div");
+  document.body.appendChild(divEmailModal);
+  divEmailModal.id = "emailModal";
+  divEmailModal.classList = "modal";
+  divEmailModal.innerHTML = `
     <div class="modal-content">
         <span class="close">&times;</span>
         <p>Include the following information if your template uses it:</p>
