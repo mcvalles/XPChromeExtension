@@ -12,7 +12,7 @@ function getTemplates(Core) {
 function postNote(Core) {
   return function (message, sender, sendResponse) {
     //console.log("Posting Note");
-    Core.Notes.post(`Bearer ${message.token}`)()(
+    Core.Notes.post()(
       JSON.stringify({
         body: message.note,
         tags: message.tags,
@@ -24,7 +24,6 @@ function postNote(Core) {
 
 // function GetNote(profileID){
 //    Core.Notes.get
-//    (`Bearer ${message.token}`)
 //    (`/?profile=${profileID}+&populate[]=tags`)
 //    ()
 //    (console.log)
