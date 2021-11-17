@@ -24,13 +24,13 @@ const request = method => path => authorization => endpoint => data => cb => {
 }
 
 function Request(Core) {
-    console.log('Loading Request')
-    return ({
-        module: 'Request',
-        request,
-        get: request('get'),
-        post: request('post')
-    })
+  //console.log('Loading Request')
+  return {
+    module: "Request",
+    request,
+    get: request("get"),
+    post: request("post"),
+  };
 }
 
-export default Request
+export default Request;
