@@ -1,21 +1,26 @@
 const request = method => path => authorization => endpoint => data => cb => {
-    console.log({
-        method, path, authorization,endpoint,data,cb
-    })
-
     const opts = {
         method: method.toUpperCase(),
         headers: {
-            authorization,
             'Content-Type': 'application/json'
         },
-        body: data,
+        body: typeof data == 'string'
+        ? data
+        : JSON.stringify(data),
     }
+    
+    return chrome.storage.sync.get('XPLogin')
+    .then(( loginInfo ) => {
+        const token = loginInfo?.XPLogin?.token
+        const bearer = `Bearer ${token}`
 
-    return fetch(path + endpoint, opts)
-    .then(r => r.json())
-    .then(cb)
-    .catch(e => console.error(e))
+        if (authorization) opts.headers.authorization = bearer
+
+        fetch(path + (endpoint ?? ''), opts)
+        .then(r => r.json())
+        .then(cb)
+        .catch(e => console.error(e))
+    })
 }
 
 function Request(Core) {
