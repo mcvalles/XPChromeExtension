@@ -13,9 +13,8 @@ Core.Request = Request(Core)
 Core.Notes = Notes(Core)
 Core.Login = Login(Core)
 
-Core.handleMessage = messageHandlers => (message, sender, sendResponse) => {
-    messageHandlers[message.target.toLowerCase()](Core)(message, sender, sendResponse)
-    return true
-}
+Core.handleMessage = messageHandlers => 
+    (message, sender, sendResponse) => 
+        !!messageHandlers[message.target.toLowerCase()][message.action](Core)(message, sender, sendResponse)
 
 export default Core

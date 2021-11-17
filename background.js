@@ -12,7 +12,7 @@ const modules = [Emails, Linkedin]
 const messageHandlers = Object.values(modules)
 .reduce((p, c) => {
         console.log(`Registering messageHandler for: ${c.module}`)
-        p[c.module.toLowerCase()] = c.messageHandler
+        p[c.module.toLowerCase()] = c.messageHandlers
         return p
 }, {})
 

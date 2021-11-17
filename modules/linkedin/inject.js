@@ -1,12 +1,15 @@
 console.log('XCE :: Injected')
 
+let name = ''
+
 const linkedinObserver = new MutationObserver(mutation => {
-    if (document.querySelector('h1') != null) {
+    if (document.querySelector('h1') != null && name != document.querySelector('h1').innerText) {
+        name = document.querySelector('h1').innerText
         console.log(`XCE :: ${document.querySelector('h1').innerText}`)
         askXP(document.querySelector('h1').innerText)
-        linkedinObserver.disconnect();
     }
 })
+
 linkedinObserver.observe(document.body, {
     attributes: true,
     childList: true,
@@ -17,7 +20,6 @@ const askXP = user => chrome.runtime.sendMessage({
     target: 'linkedin',
     action: 'getUserByLI',
     params: user,
-    authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQ3NSwiaWF0IjoxNjM0NzcwMDQzLCJleHAiOjE2MzczNjIwNDN9.cEfqUw1rq45m_z3AD4H4neqrJlYY3DY-ZDfVhYJxPUg'
 }, (res) => {
     console.log(res)
 
