@@ -1,8 +1,21 @@
 //Constants  -----------------------------------------------------------------
 var save = "";
+const XPLogin = {
+    username: null,
+    password: null,
+}
 chrome.storage.sync.get(["save"],(res) => {
     save = res ?? ""
     console.log(save)
+})
+
+chrome.storage.sync.get('XPLogin',(res) => {
+    console.log(`XCE :: XP Login: ${JSON.stringify(res || {}, 0, 2)}`)
+
+    if (res.XPLogin.username) document.getElementById('xp_user').value = res.XPLogin.username
+    if (res.XPLogin.password) document.getElementById('xp_password').value = res.XPLogin.password
+    document.getElementById('xp_logged_in').checked = !!res.XPLogin.token
+    document.getElementById('xp_logged_in').setAttribute('disabled', true)    
 })
 
 //On Page Load Add Event Listeners  ------------------------------------------
@@ -30,6 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
     //Calendly link OnChange
     document.getElementById('my_calendly').addEventListener('change', saveCalendly)
 
+    //XP Login OnChange
+    document.getElementById('xp_user').addEventListener('change', saveXPUser)
+    document.getElementById('xp_password').addEventListener('change', saveXPPassword)
+
     //FAQ link OnChange
     document.getElementById('faq').addEventListener('change', saveFaq)
 
@@ -37,6 +54,23 @@ document.addEventListener('DOMContentLoaded', function() {
     tabs[0].click();
 });
 
+//XP User OnChange  ----------------------------------------------------
+function saveXPUser(){
+    console.log(this.value)
+    XPLogin.username = this.value;
+    
+    chrome.storage.sync.set({XPLogin}, () => {
+        console.log(`XP Username set to ${XPLogin.username}`)
+    })
+}
+//XP Password OnChange  ----------------------------------------------------
+function saveXPPassword(){
+    XPLogin.password = this.value
+    
+    chrome.storage.sync.set({XPLogin}, () => {
+        console.log(`XP Password set to ${XPLogin.password}`)
+    })
+}
 //Calendly link OnChange  ----------------------------------------------------
 function saveCalendly(){
     save["myCalendly"] = this.value;

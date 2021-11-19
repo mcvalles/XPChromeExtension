@@ -53,7 +53,8 @@ for (var i = 0; i < modalButtons.length; i++) {
 function afterEmailLoaded() {
   chrome.runtime.sendMessage(
     {
-      message: "getTemplates",
+      target: "emails",
+      action: "getTemplates",
     },
     (res) => {
       templates = res;
@@ -243,8 +244,8 @@ function AddEmailNote(noteContent) {
 
     chrome.runtime.sendMessage(
       {
-        message: "postNote",
-        token: localStorage.authToken,
+        target: "emails",
+        action: "postNote",
         note: noteContent,
         profileId: GetProfileId(),
         tags: tagList,
