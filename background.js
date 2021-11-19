@@ -1,19 +1,19 @@
-import Core from "/core/core.js";
-import Emails from "/modules/emails/emails.js";
+import Core from '/core/core.js'
+import Emails from '/modules/emails/emails.js'
+import Linkedin from '/modules/linkedin/linkedin.js'
 
-const imports = [Emails(Core)];
+const modules = [Emails, Linkedin]
+.map(i => i(Core))
+.reduce((p, c) => {
+        p[c.module] = c
+        return p
+}, {})
 
-function registerListeners() {
-  imports
-    .reduce((p, c) => {
-      //console.log(`processing listeners from ${c.module}`)
-      p = p.concat(Object.entries(c.listeners));
-      return p;
-    }, [])
-    .forEach((listener) => {
-      //console.log(`adding listener ${listener[0]}`)
-      chrome.runtime.onMessage.addListener(listener[1]);
-    });
-}
+const messageHandlers = Object.values(modules)
+.reduce((p, c) => {
+        console.log(`Registering messageHandler for: ${c.module}`)
+        p[c.module.toLowerCase()] = c.messageHandlers
+        return p
+}, {})
 
-registerListeners();
+chrome.runtime.onMessage.addListener(Core.handleMessage(messageHandlers))
