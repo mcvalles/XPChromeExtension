@@ -21,8 +21,6 @@
         "background",
         "storage",
         "tabs",
-        "identity",
-        "identity.email",
         "clipboardWrite"
     ],
     "host_permissions": [
