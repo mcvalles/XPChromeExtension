@@ -24,7 +24,7 @@ var templates;
 //Event Listeners --------------------------------------------------------------------------------
 
 const emailObserver = new MutationObserver((mutations) => {
-  if (document.querySelector("div.Profile-module--email--1WtUw") != null) {
+  if (GetEmailLink() != null) {
     afterEmailLoaded();
     emailObserver.disconnect();
   }
@@ -62,9 +62,8 @@ function afterEmailLoaded() {
     }
   );
 
-  document
-    .querySelector(".Profile-module--email--1WtUw a")
-    .addEventListener("click", OpenModal);
+  var email = GetEmailLink();
+  email.addEventListener("click", OpenModal);
   //When the user clicks anywhere outside of the modal, close it
   //window.addEventListener('click', CloseModal);
 }
@@ -93,7 +92,7 @@ function SaveAndClose(note) {
 }
 
 function SendBlankEmail() {
-  window.location.href = GetEmailLink();
+  window.location.href = GetEmailLink().href;
   CloseModal();
 }
 
@@ -150,7 +149,7 @@ function SendTemplateEmail() {
   CopyRichText(content); //Copy Email Template to Clipboard
   //AddEmailNote(note);
   window.location.href =
-    GetEmailLink() + "?subject=" + subject + "&body=" + pasteContentMessage;
+    GetEmailLink().href + "?subject=" + subject + "&body=" + pasteContentMessage;
   SaveAndClose(note);
 }
 
@@ -215,7 +214,7 @@ function GetCandidateName() {
 }
 
 function GetEmailLink() {
-  return document.querySelector(".Profile-module--email--1WtUw a").href;
+  return document.querySelector(".Profile-module--email--18t7v a");
 }
 
 function GetProfileId() {
