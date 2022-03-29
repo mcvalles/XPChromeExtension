@@ -6,7 +6,7 @@ const linkedinObserver = new MutationObserver(mutation => {
     if (document.querySelector('h1') != null && name != document.querySelector('h1').innerText) {
         name = document.querySelector('h1').innerText
         console.log(`XCE :: ${document.querySelector('h1').innerText}`)
-        askXP(document.querySelector('h1').innerText)
+        askXP(document.location.href)
     }
 })
 
@@ -16,10 +16,10 @@ linkedinObserver.observe(document.body, {
     subtree: true
 })
 
-const askXP = user => chrome.runtime.sendMessage({
+const askXP = linkedinUrl => chrome.runtime.sendMessage({
     target: 'linkedin',
     action: 'getUserByLI',
-    params: user,
+    params: linkedinUrl,
 }, (res) => {
     console.log(res)
 
