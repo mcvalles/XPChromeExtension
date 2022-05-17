@@ -13,11 +13,12 @@ tagObserver.observe(currentPage, {
 });
 
 function SetRedTags() {
-  var tags = document.querySelectorAll('.ant-tag-green');
+  var tags = document.querySelectorAll('.ant-tag-green, .ant-tag-blue');
   for (i = 0; i < tags.length; i++) {
     if (filter.indexOf(tags[i].innerText) > -1) {
       tags[i].classList.add('ant-tag-red');
       tags[i].classList.remove('ant-tag-green');
+      tags[i].classList.remove('ant-tag-blue');
     }
   }
 }
