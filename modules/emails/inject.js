@@ -62,7 +62,7 @@ function afterEmailLoaded() {
     },
     (res) => {
       templates = res;
-      console.log(`message: ${JSON.stringify(res)}`)
+      //console.log(`message: ${JSON.stringify(res)}`)
     }
   );
 
@@ -278,7 +278,7 @@ function AddEmailNote(noteContent) {
         tags: tagList,
       },
       (res) => {
-        console.log(`message: ${JSON.stringify(res)}`);
+        //console.log(`message: ${JSON.stringify(res)}`);
       }
     );
   }
