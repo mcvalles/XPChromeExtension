@@ -178,13 +178,13 @@ function SendTemplateEmail() {
 
 //Note Template Getters--------------------------------------------------------------------------
 function GetNoteBody(notekey) {
-  var noteBody = templates[notekey] ? ? "";
+  var noteBody = templates[notekey] ?? "";
   return noteBody;
 }
 
 //Email Template Getters--------------------------------------------------------------------------
 function GetEmailBody(emailkey) {
-  var emailBody = templates[emailkey] ? ? "";
+  var emailBody = templates[emailkey] ?? "";
   if (emailBody) {
     emailBody = emailBody.replace("[candidate]", GetCandidateName());
     emailBody = emailBody.replace("[calendlyLink]", GetCalendlyLink());
@@ -200,40 +200,40 @@ function GetEmailBody(emailkey) {
 }
 
 function GetCalendlyLink() {
-  var link = document.getElementById("calendlyLink").value ? ? "";
+  var link = document.getElementById("calendlyLink").value ?? "";
   var calendly = `<a href="${link}">Calendly link</a>`;
   return calendly;
 }
 
 function GetInterviewerName() {
-  return document.getElementById("interviewer").value ? ? "";
+  return document.getElementById("interviewer").value ?? "";
 }
 
 function GetReferralName() {
-  return document.getElementById("referralName").value ? ? "";
+  return document.getElementById("referralName").value ?? "";
 }
 
 function GetRoleName() {
-  return document.getElementById("role-name").value ? ? "";
+  return document.getElementById("role-name").value ?? "";
 }
 
 function GetTechList() {
-  return document.getElementById("techList").value ? ? "";
+  return document.getElementById("techList").value ?? "";
 }
 
 function GetEmailSubject(subjectKey) {
-  var emailSubject = templates[subjectKey] ? ? "";
+  var emailSubject = templates[subjectKey] ?? "";
   return emailSubject;
 }
 
 function GetFaq() {
-  var link = templates["faq"] ? ? "";
+  var link = templates["faq"] ?? "";
   var faq = `<a href="${link}">FAQ</a>`;
   return faq;
 }
 
 function GetMyCalendlyLink() {
-  var link = templates["myCalendly"] ? ? "";
+  var link = templates["myCalendly"] ?? "";
   var myCalendly = `<a href="${link}">my Calendly</a>`;
   return myCalendly;
 }
