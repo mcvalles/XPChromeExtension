@@ -17,7 +17,7 @@
     "default_title": "Email Template Extension"
   },
   "options_page": "options/options.html",
-  "permissions": ["background", "storage", "clipboardWrite", "tabs"],
+  "permissions": ["background", "storage", "clipboardWrite"],
   "host_permissions": ["https://*.x-team.com/*", "https://*.linkedin.com/*"],
   "background": {
     "service_worker": "background.js",
