@@ -21,17 +21,22 @@ var noteText = "Reached out through an [emailtype] email.";
 var alternativeNoteText = "[emailtype] email sent.";
 var templates;
 
+
 //Event Listeners --------------------------------------------------------------------------------
 
-const emailObserver = new MutationObserver((mutations) => {
+const generalObserver = new MutationObserver((mutations) => {
   if (GetEmailLink() != null) {
     afterEmailLoaded();
-    emailObserver.disconnect();
   }
+
+  if (document.getElementById('note') != null) {
+    afterNotesLoaded();
+  }
+
 });
 
 var profilePage = document.querySelector("body");
-emailObserver.observe(profilePage, {
+generalObserver.observe(profilePage, {
   subtree: true,
   childlist: true,
   attributes: true,
@@ -51,14 +56,13 @@ for (var i = 0; i < modalButtons.length; i++) {
 
 //Functions --------------------------------------------------------------------------------------
 function afterEmailLoaded() {
-  chrome.runtime.sendMessage(
-    {
+  chrome.runtime.sendMessage({
       target: "emails",
       action: "getTemplates",
     },
     (res) => {
       templates = res;
-      //console.log(`message: ${JSON.stringify(res)}`)
+      console.log(`message: ${JSON.stringify(res)}`)
     }
   );
 
@@ -66,6 +70,24 @@ function afterEmailLoaded() {
   email.addEventListener("click", OpenModal);
   //When the user clicks anywhere outside of the modal, close it
   //window.addEventListener('click', CloseModal);
+}
+
+function afterNotesLoaded() {
+  var noteButton = document.getElementById('create_note');
+  if (noteButton == null && document.querySelector('label[title=Body]') == null) { //do not display the CreateNote button if a note is being edited 
+    AddTemplateNoteButton();
+    noteButton = document.getElementById("create_note");
+    noteButton.addEventListener("click", OpenNoteTemplate);
+  }
+}
+
+function AddTemplateNoteButton() {
+  var divNoteTemplateButton = document.createElement("button");
+  divNoteTemplateButton.id = "create_note";
+  divNoteTemplateButton.classList = "ant-btn";
+  divNoteTemplateButton.innerHTML = `<span>Create Note</span>`;
+  var divContainer = document.getElementById('note').nextSibling;
+  divContainer.appendChild(divNoteTemplateButton);
 }
 
 function OpenModal(e) {
@@ -76,7 +98,7 @@ function OpenModal(e) {
   }
 }
 
-function CloseModal(){
+function CloseModal() {
   if (document.querySelector("#emailModal") != null) {
     var modal = document.getElementById("emailModal");
     modal.style.display = "none";
@@ -153,9 +175,16 @@ function SendTemplateEmail() {
   SaveAndClose(note);
 }
 
+
+//Note Template Getters--------------------------------------------------------------------------
+function GetNoteBody(notekey) {
+  var noteBody = templates[notekey] ? ? "";
+  return noteBody;
+}
+
 //Email Template Getters--------------------------------------------------------------------------
 function GetEmailBody(emailkey) {
-  var emailBody = templates[emailkey] ?? "";
+  var emailBody = templates[emailkey] ? ? "";
   if (emailBody) {
     emailBody = emailBody.replace("[candidate]", GetCandidateName());
     emailBody = emailBody.replace("[calendlyLink]", GetCalendlyLink());
@@ -171,40 +200,40 @@ function GetEmailBody(emailkey) {
 }
 
 function GetCalendlyLink() {
-  var link = document.getElementById("calendlyLink").value ?? "";
+  var link = document.getElementById("calendlyLink").value ? ? "";
   var calendly = `<a href="${link}">Calendly link</a>`;
   return calendly;
 }
 
 function GetInterviewerName() {
-  return document.getElementById("interviewer").value ?? "";
+  return document.getElementById("interviewer").value ? ? "";
 }
 
 function GetReferralName() {
-  return document.getElementById("referralName").value ?? "";
+  return document.getElementById("referralName").value ? ? "";
 }
 
 function GetRoleName() {
-  return document.getElementById("role-name").value ?? "";
+  return document.getElementById("role-name").value ? ? "";
 }
 
 function GetTechList() {
-  return document.getElementById("techList").value ?? "";
+  return document.getElementById("techList").value ? ? "";
 }
 
 function GetEmailSubject(subjectKey) {
-  var emailSubject = templates[subjectKey] ?? "";
+  var emailSubject = templates[subjectKey] ? ? "";
   return emailSubject;
 }
 
 function GetFaq() {
-  var link = templates["faq"] ?? "";
+  var link = templates["faq"] ? ? "";
   var faq = `<a href="${link}">FAQ</a>`;
   return faq;
 }
 
 function GetMyCalendlyLink() {
-  var link = templates["myCalendly"] ?? "";
+  var link = templates["myCalendly"] ? ? "";
   var myCalendly = `<a href="${link}">my Calendly</a>`;
   return myCalendly;
 }
@@ -214,7 +243,7 @@ function GetCandidateName() {
 }
 
 function GetEmailLink() {
-  return document.querySelector(".Profile-module--email--18t7v a");
+  return document.querySelector('[class="Profile-module--email--a+IrV"] a');
 }
 
 function GetProfileId() {
@@ -241,8 +270,7 @@ function AddEmailNote(noteContent) {
     //document.getElementById("notes").nextSibling.querySelector('.ant-btn').click(); //click on create note
     var tagList;
 
-    chrome.runtime.sendMessage(
-      {
+    chrome.runtime.sendMessage({
         target: "emails",
         action: "postNote",
         note: noteContent,
@@ -254,4 +282,16 @@ function AddEmailNote(noteContent) {
       }
     );
   }
+}
+
+function OpenNoteTemplate() {
+  var templateText = GetNoteBody('note_body');
+  var createButton = document.getElementById("create_note");
+  createButton.previousElementSibling.click()
+  document.getElementById("body").focus();
+  document.getElementById("body").click();
+  setTimeout(function () {
+    document.getElementById("body").innerHTML = templateText;
+  }, 550);
+
 }

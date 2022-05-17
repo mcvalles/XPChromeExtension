@@ -37,100 +37,120 @@
         </div>
     </div>
 
-    <div class="w3-container"> 
-        <h2>Email Templates</h2>
-        <p>Please add subject names and template bodies for each email type below.</p>
-        <p>You'll find templates already in placem but feel free to personalize them as you like.</p>
+    <div id="tab_main"  class="w3-bar"> 
+        <button id="emailTemplates" class="w3-bar-item w3-button">Email Templates</button>
+        <button id="noteTemplates" class="w3-bar-item w3-button">Note Templates</button>      
     </div>
 
-    <div class="w3-bar">
-        <button id="outreach" class="w3-bar-item w3-button">Outreach</button>
-        <button id="referral" class="w3-bar-item w3-button">Referral</button>
-        <button id="interview" class="w3-bar-item w3-button">Interview</button>
-        <button id="rejection" class="w3-bar-item w3-button">Rejection</button>
-        <button id="onhold" class="w3-bar-item w3-button">On Hold</button>
-        <button id="acceptance" class="w3-bar-item w3-button">Acceptance</button>
-        <button id="shortlist" class="w3-bar-item w3-button">Previously Vetted</button>
-        <button id="update" class="w3-bar-item w3-button">Application Update</button>
-    </div>
-
-    <div id="tab_outreach" class="w3-container email">
-        <h2>Template Details</h2>
-        <div>
-            <label for="subject">Subject</label>
-            <input type="text" id="eml_outreach_subj" name="subject"><br><br>
-            <textarea id="tmp_outreach" name="emailBody" rows="12">
-            </textarea>
+ 
+    <div id="noteContent" class="main" style="display:none">
+        <div id="tab_note" class="w3-container">
+            <div>
+                <p>Please add a note template below.</p>
+            </div>
+            <h2>Note Template Details</h2>
+            <div>
+                <textarea id="note_body" name="noteBody" rows="12"></textarea>
+            </div>
         </div>
     </div>
 
-    <div id="tab_referral" class="w3-container email" style="display:none">
-        <h2>Template Details</h2>
-        <div>
-            <label for="subject">Subject</label>
-            <input type="text" id="eml_referral_subj" name="subject"><br><br>
-            <textarea id="tmp_referral" name="emailBody" rows="12">
-            </textarea>
+    <div id="emailContent" class="main selected" style="display:none">
+        <div id="tab_emails" class="w3-container">
+            <div>
+                <p>Please add subject names and template bodies for each email type below.</p>
+                <p>You'll find templates already in place but feel free to personalize them as you like.</p>
+            </div>
+            <div class="w3-bar">
+                <button id="outreach" class="w3-bar-item w3-button">Outreach</button>
+                <button id="referral" class="w3-bar-item w3-button">Referral</button>
+                <button id="interview" class="w3-bar-item w3-button">Interview</button>
+                <button id="rejection" class="w3-bar-item w3-button">Rejection</button>
+                <button id="onhold" class="w3-bar-item w3-button">On Hold</button>
+                <button id="acceptance" class="w3-bar-item w3-button">Acceptance</button>
+                <button id="shortlist" class="w3-bar-item w3-button">Previously Vetted</button>
+                <button id="update" class="w3-bar-item w3-button">Application Update</button>
+            </div>
         </div>
-    </div>
-
-    <div id="tab_interview" class="w3-container email" style="display:none">
-        <h2>Template Details</h2>
-        <div>
-            <label for="subject">Subject</label>
-            <input type="text" id="eml_interview_subj" name="subject"><br><br>
-            <textarea id="tmp_interview" name="emailBody" rows="12">
-            </textarea>
+        
+        <div id="tab_outreach" class="w3-container email">
+            <h2>Template Details</h2>
+            <div>
+                <label for="subject">Subject</label>
+                <input type="text" id="eml_outreach_subj" name="subject"><br><br>
+                <textarea id="tmp_outreach" name="emailBody" rows="12">
+                </textarea>
+            </div>
         </div>
-    </div>
 
-    <div id="tab_rejection" class="w3-container email" style="display:none">
-        <h2>Template Details</h2>
-        <div>
-            <label for="subject">Subject</label>
-            <input type="text" id="eml_rejection_subj" name="subject"><br><br>
-            <textarea id="tmp_rejection" name="emailBody" rows="12">
-            </textarea>
+        <div id="tab_referral" class="w3-container email" style="display:none">
+            <h2>Template Details</h2>
+            <div>
+                <label for="subject">Subject</label>
+                <input type="text" id="eml_referral_subj" name="subject"><br><br>
+                <textarea id="tmp_referral" name="emailBody" rows="12">
+                </textarea>
+            </div>
         </div>
-    </div>
 
-    <div id="tab_onhold" class="w3-container email" style="display:none">
-        <h2>Template Details</h2>
-        <div>
-            <label for="subject">Subject</label>
-            <input type="text" id="eml_onhold_subj" name="subject"><br><br>
-            <textarea id="tmp_onhold" name="emailBody" rows="12">
-            </textarea>
+        <div id="tab_interview" class="w3-container email" style="display:none">
+            <h2>Template Details</h2>
+            <div>
+                <label for="subject">Subject</label>
+                <input type="text" id="eml_interview_subj" name="subject"><br><br>
+                <textarea id="tmp_interview" name="emailBody" rows="12">
+                </textarea>
+            </div>
         </div>
-    </div>
 
-    <div id="tab_acceptance" class="w3-container email" style="display:none">
-        <h2>Template Details</h2>
-        <div>      
-            <label for="subject">Subject</label>
-            <input type="text" id="eml_acceptance_subj" name="subject"><br><br>
-            <textarea id="tmp_acceptance" name="emailBody" rows="12">      
-            </textarea>
+        <div id="tab_rejection" class="w3-container email" style="display:none">
+            <h2>Template Details</h2>
+            <div>
+                <label for="subject">Subject</label>
+                <input type="text" id="eml_rejection_subj" name="subject"><br><br>
+                <textarea id="tmp_rejection" name="emailBody" rows="12">
+                </textarea>
+            </div>
         </div>
-    </div>
 
-    <div id="tab_shortlist" class="w3-container email" style="display:none">
-        <h2>Template Details</h2>
-        <div>    
-            <label for="subject">Subject</label>
-            <input type="text" id="eml_shortlist_subj" name="subject"><br><br>
-            <textarea id="tmp_shortlist" name="emailBody" rows="12">      
-            </textarea>
+        <div id="tab_onhold" class="w3-container email" style="display:none">
+            <h2>Template Details</h2>
+            <div>
+                <label for="subject">Subject</label>
+                <input type="text" id="eml_onhold_subj" name="subject"><br><br>
+                <textarea id="tmp_onhold" name="emailBody" rows="12">
+                </textarea>
+            </div>
         </div>
-    </div>
 
-    <div id="tab_update" class="w3-container email" style="display:none">
-        <h2>Template Details</h2>
-        <div>
-            <label for="subject">Subject</label>
-            <input type="text" id="eml_update_subj" name="subject"><br><br>
-            <textarea id="tmp_update" name="emailBody" rows="12">      
-            </textarea>
+        <div id="tab_acceptance" class="w3-container email" style="display:none">
+            <h2>Template Details</h2>
+            <div>      
+                <label for="subject">Subject</label>
+                <input type="text" id="eml_acceptance_subj" name="subject"><br><br>
+                <textarea id="tmp_acceptance" name="emailBody" rows="12">      
+                </textarea>
+            </div>
+        </div>
+
+        <div id="tab_shortlist" class="w3-container email" style="display:none">
+            <h2>Template Details</h2>
+            <div>    
+                <label for="subject">Subject</label>
+                <input type="text" id="eml_shortlist_subj" name="subject"><br><br>
+                <textarea id="tmp_shortlist" name="emailBody" rows="12">      
+                </textarea>
+            </div>
+        </div>
+
+        <div id="tab_update" class="w3-container email" style="display:none">
+            <h2>Template Details</h2>
+            <div>
+                <label for="subject">Subject</label>
+                <input type="text" id="eml_update_subj" name="subject"><br><br>
+                <textarea id="tmp_update" name="emailBody" rows="12">      
+                </textarea>
+            </div>
         </div>
     </div>
 </div>
