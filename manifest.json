@@ -49,6 +49,13 @@
       "all_frames": true,
       "run_at": "document_end",
       "js": ["modules/linkedin/inject.js"]
+    },
+    {
+      "matches": ["https://app.hireez.com/*"],
+      "css": ["modules/hireEZ//hireez.css"],
+      "all_frames": true,
+      "run_at": "document_end",
+      "js": ["modules/hireEZ/inject.js"]
     }
   ]
 }

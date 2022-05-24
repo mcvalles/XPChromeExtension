@@ -1,8 +1,9 @@
 import Core from '/core/core.js'
 import Emails from '/modules/emails/emails.js'
 import Linkedin from '/modules/linkedin/linkedin.js'
+import HireEZ from '/modules/hireEZ/hireez.js'
 
-const modules = [Emails, Linkedin]
+const modules = [Emails, Linkedin, HireEZ]
 .map(i => i(Core))
 .reduce((p, c) => {
         p[c.module] = c
