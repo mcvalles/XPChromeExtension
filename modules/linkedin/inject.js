@@ -1,17 +1,16 @@
 console.log('XCE :: Injected');
 
-let name = '';
-
 const linkedinObserver = new MutationObserver((mutation) => {
     if (
         document.querySelector('h1') != null &&
-        name != document.querySelector('h1').innerText
+        name != document.querySelector('h1').innerText &&
+        document.location.href.indexOf('https://www.linkedin.com/in') != -1 //only consider profile pages
     ) {
         name = document.querySelector('h1').innerText;
-        //console.log(`XCE :: ${document.querySelector('h1').innerText}`);
-        //var linkedinElems = document.location.href.split('/');
-        //const vanityName = linkedinElems[linkedinElems.length - 2];
-        askXP(name);
+        console.log(`XCE :: ${document.querySelector('h1').innerText}`);
+        var linkedinElems = document.location.href.split('/');
+        const vanityName = linkedinElems[linkedinElems.length - 2];
+        askXP(vanityName);
     }
 });
 
@@ -29,20 +28,20 @@ const askXP = (linkedinUrl) =>
         },
         (res) => {
             console.log(res);
-            const notificationDiv = document.createElement('div');
+            var notificationDiv = document.createElement('div');
             notificationDiv.id = 'xpNotification';
-            notificationDiv.innerHTML = '<table><tr>';
-            notificationDiv.innerHTML += !!res.profiles.length ?
-                res.profiles
+            var notificationString = '<table>';
+            notificationString += !!res.length ?
+                res
                 .map(
-                    (p) => `<td>
-                        <a href="https://xp-cavalry.x-team.com/profile/?id=${p.id}">XP Profile: ${p.fullName}: ${p.email}</a>
-                      </td>`
+                    (p) => `<tr><td>
+                                <a href="https://xp-cavalry.x-team.com/profile/?id=${p.id}">XP Profile: ${p.fullName}: ${p.email}</a>
+                            </td></tr>`
                 )
-                .join('</tr><tr>') :
-                '<td>No hits in XP</td>';
-            notificationDiv.innerHTML += '</tr></table>';
-
+                :'<tr><td>No hits in XP</td></tr>';
+            notificationString += '</table>';
+            notificationString = notificationString.replace(',', '');
+            notificationDiv.innerHTML = notificationString;
             const mainElement = document.getElementById('main');
             mainElement.insertBefore(notificationDiv, mainElement.firstChild);
         }

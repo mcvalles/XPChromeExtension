@@ -1,17 +1,16 @@
-/*
+
 const getUserByLI = Core => (message, sender, sendResponse) => Core.Request.get
     ('https://jobs-api.x-team.com/profiles')
     (true)
-    (`?linkedinAccount=${message.params}&_limit=10`)
+    (`?linkedinAccount_contains=${message.params}`)
     ()
     (sendResponse)
 
-*/
 
-const getUserByLI = (Core) => (message, sender, sendResponse) =>
+/*const getUserByLI = (Core) => (message, sender, sendResponse) =>
     Core.Request.get('https://jobs-api.x-team.com/search/quick')(true)(
         `?value=${message.params}&_limit=10`
-    )()(sendResponse);
+    )()(sendResponse);*/
 
 export default (Core) => ({
     module: 'Linkedin',
