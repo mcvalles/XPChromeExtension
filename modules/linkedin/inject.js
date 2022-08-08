@@ -2,15 +2,17 @@ console.log('XCE :: Injected');
 
 const linkedinObserver = new MutationObserver((mutation) => {
     if (
-        document.querySelector('h1') != null &&
-        name != document.querySelector('h1').innerText &&
-        document.location.href.indexOf('https://www.linkedin.com/in') != -1 //only consider profile pages
-    ) {
-        name = document.querySelector('h1').innerText;
-        console.log(`XCE :: ${document.querySelector('h1').innerText}`);
-        var linkedinElems = document.location.href.split('/');
-        const vanityName = linkedinElems[linkedinElems.length - 2];
-        askXP(vanityName);
+        (document.querySelector('h1:not(.check)') != null ||
+        url != document.location.href) &&
+        document.location.href.indexOf('https://www.linkedin.com/in') != -1 //only consider profile pages        
+    ) {   
+        if (document.querySelector('h1') != null){
+            url = document.location.href;
+            document.querySelector('h1').classList.add('check');       
+            var linkedinElems = document.location.href.split('/');
+            const vanityName = linkedinElems[linkedinElems.length - 2];
+            askXP(vanityName);
+        }
     }
 });
 
@@ -27,7 +29,6 @@ const askXP = (linkedinUrl) =>
             params: linkedinUrl,
         },
         (res) => {
-            console.log(res);
             var notificationDiv = document.createElement('div');
             notificationDiv.id = 'xpNotification';
             var notificationString = '<table>';
@@ -41,6 +42,9 @@ const askXP = (linkedinUrl) =>
                 :'<tr><td>No hits in XP</td></tr>';
             notificationString += '</table>';
             notificationString = notificationString.replace(',', '');
+            if (document.querySelector('#xpNotification') != null){
+                document.querySelector('#xpNotification').remove();
+            }
             notificationDiv.innerHTML = notificationString;
             const mainElement = document.getElementById('main');
             mainElement.insertBefore(notificationDiv, mainElement.firstChild);

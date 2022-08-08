@@ -69,7 +69,6 @@ const askXP = (linkedinUrl) =>
       params: linkedinUrl,
     },
     (res) => {
-      console.log(res);
       const notificationDiv = document.createElement('div');
       notificationDiv.id = 'xpNotification';
       notificationDiv.classList.add("hireEZlink")
@@ -97,7 +96,6 @@ const askXP2 = (linkedinUrl, element) =>
       params: linkedinUrl,
     },
     (res) => {
-      console.log(res);
       var notificationDiv = document.createElement('div');
       notificationDiv.id = 'xpNotification';
       notificationDiv.classList.add("hireEZlink")
