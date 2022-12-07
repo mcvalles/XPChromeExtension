@@ -2,11 +2,11 @@ const getXPLoginToken = Core => chrome.storage.sync.get('XPLogin')
     .then(({ XPLogin }) => doLoginRequest(Core)(XPLogin || {}))
     
 const setXPLoginToken = token => chrome.storage.sync.get('XPLogin')
-    .then(xli => chrome.storage.sync.set({ XPLogin: { token: token, ...xli.XPLogin }}))
+    .then(xli => chrome.storage.sync.set({ XPLogin: { token, ...xli.XPLogin }}))
 
 
 const doLoginRequest = Core => ({ username, password }) => Core.Request.post
-    ('https://jobs-api.x-team.com/auth/local')
+    ('https://jobs-api-dev.x-team.com/auth/local')
     ()
     ('')
     ({
@@ -20,11 +20,11 @@ const login = Core => getXPLoginToken(Core)
 
 
 const testXPLoginToken = Core => chrome.storage.sync.get('XPLogin')
-    .then(({ XPLogin }) => Core.Request.get('https://jobs-api.x-team.com/users/me')
+    .then(({ XPLogin }) => Core.Request.get('https://jobs-api-dev.x-team.com/users/me')
     (true)
     ()
     ()
-    (r => {
+    (async r => {
         if (!r?.id) {
             console.log(`XCE :: Login :: Bad token; refreshing...`)
             return chrome.storage.sync.set({
@@ -37,13 +37,17 @@ const testXPLoginToken = Core => chrome.storage.sync.get('XPLogin')
             .then(r => login(Core))
         }
         console.log(`XCE :: Login :: Valid token`)
+
+        await chrome.storage.sync.set({
+          XPUserId: r.id
+        })
         return null
     }))
 
-function Login(Core) {
+async function Login(Core) {
     console.log('XCE :: Core :: Loading Login')
-    testXPLoginToken(Core)
-    
+    await testXPLoginToken(Core)
+
     return ({
         module: 'Login'
     })

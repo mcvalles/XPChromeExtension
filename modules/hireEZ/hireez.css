@@ -1,3 +1,31 @@
 .hireEZlink {
     margin-left: 2%;
 }
+
+.create-xp {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 27px;
+    width: 80px;
+}
+
+.loader {
+  animation: is-rotating 1s infinite;
+  border: 4px solid #e5e5e5;
+  border-radius: 50%;
+  border-top-color: #51d4db;
+  height: 20px;
+  width: 20px;
+}
+
+.createXP {
+    display: flex;
+    gap: 10px;
+}
+
+@keyframes is-rotating {
+    to {
+      transform: rotate(1turn);
+    }
+}

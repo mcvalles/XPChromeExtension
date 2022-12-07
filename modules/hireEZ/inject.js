@@ -39,16 +39,25 @@ function findOnXP3(linkedin) {
   setTimeout(function () {
     if (linkedin != null) {
       var linkedinElems = linkedin.split('/');
+      
       const vanityName = linkedinElems[linkedinElems.length - 1];
-      askXP(vanityName);
+      askXP({ 
+        linkedinName: vanityName,
+        linkedinUrl: linkedin
+      });
     }
   }, 2000);
 };
 
 function findOnXP2(url, element) {
+    openUserData(element);
+
     var linkedinElems = url.split('/');
     const vanityName = linkedinElems[linkedinElems.length - 1];
-    askXP2(vanityName, element);
+    askXP({ 
+      linkedinName: vanityName,
+      linkedinUrl: url
+    }, element);
 };
 
 function findOnXP() {
@@ -57,61 +66,110 @@ function findOnXP() {
     if (linkedin != null) {
       var linkedinElems = linkedin.href.split('/');
       const vanityName = linkedinElems[linkedinElems.length - 1];
-      askXP(vanityName);
+      askXP({ linkedinName: vanityName });
     }
   }, 2000);
 };
 
-const askXP = (linkedinUrl) =>
+const askXP = ({ linkedinName, linkedinUrl }, element) =>
   chrome.runtime.sendMessage({
       target: 'hireez',
       action: 'getUserByLI',
-      params: linkedinUrl,
+      params: linkedinName,
     },
     (res) => {
+      const createXPId = `create-xp-${linkedinName.replace(/[^a-zA-Z0-9 ]/g, '')}`;
+      
       const notificationDiv = document.createElement('div');
       notificationDiv.id = 'xpNotification';
       notificationDiv.classList.add("hireEZlink")
-      var notificationString = '<table class="xp-profiles">';
+      let notificationString = '<table class="xp-profiles">';
       notificationString += !!res.length ?
         res
         .map(
-          (p) => `<tr><td>
-                        <a href="https://xp-cavalry.x-team.com/profile/?id=${p.id}">XP Profile: ${p.fullName}: ${p.email}</a>
-                  </td></tr>`
+          (p) => `<tr><td>${xpCavalryUrl(p)}</td></tr>`
         )
-        :'<tr><td>No hits in XP</td></tr>';
+        :`<tr><td class="createXP" id="no-hits-${createXPId}">No hits in XP <span>-</span> <button class="create-xp" id="${createXPId}" type="button">
+            <div id="span-${createXPId}">Create XP</div></button></td></tr>`;
         notificationString += '</table>';
         notificationString = notificationString.replace(',', '');
         notificationDiv.innerHTML = notificationString;
-      const mainElement = document.querySelector('.candidate-profile--basic').parentElement;
-      mainElement.insertBefore(notificationDiv, mainElement.firstChild);
+        const mainElement = element ? element.parentElement 
+          : document.querySelector('.candidate-profile--basic')?.parentElement;
+        
+        if(mainElement) {
+          mainElement.insertBefore(notificationDiv, mainElement.firstChild);
+        }
+
+        if(!res.length) {
+          const buttonAddOnXP = document.querySelector(`#${createXPId}`);
+          buttonAddOnXP.addEventListener("click", async () => {
+            if(element) {
+              const { name, email } = getUserData(element);
+
+              if(name && email) {
+                const divCreateXp = document.querySelector(`#span-${createXPId}`);
+                divCreateXp.innerText = '';
+                divCreateXp.classList.add('loader');
+          
+                const { XPUserId } = await chrome.storage.sync.get('XPUserId');
+                    
+                const newUserResponse = await chrome.runtime.sendMessage({
+                  target: 'hireez',
+                  action: 'createNewProfile',
+                  body: {
+                    fullName: name,
+                    email,
+                    linkedinAccount: linkedinUrl,
+                    created_origin_user: XPUserId,
+                  }
+                })
+          
+                if(newUserResponse.id) {
+                  const tdCreateXp = document.querySelector(`#no-hits-${createXPId}`);
+                  tdCreateXp.innerHTML = xpCavalryUrl(newUserResponse)
+                } else {
+                  divCreateXp.classList.remove('loader');
+                  divCreateXp.innerText = 'Create XP';
+                  alert(`There was an error on trying to add ${name} at xp-calvary, please try again.`)
+                }
+              }
+            }
+          });
+        }
     }
   );
 
-const askXP2 = (linkedinUrl, element) =>
-  chrome.runtime.sendMessage({
-      target: 'hireez',
-      action: 'getUserByLI',
-      params: linkedinUrl,
-    },
-    (res) => {
-      var notificationDiv = document.createElement('div');
-      notificationDiv.id = 'xpNotification';
-      notificationDiv.classList.add("hireEZlink")
-      var notificationString = '<table class="xp-profiles">';
-      notificationString += !!res.length ?
-        res
-        .map(
-          (p) => `<tr><td>
-                        <a href="https://xp-cavalry.x-team.com/profile/?id=${p.id}">XP Profile: ${p.fullName}: ${p.email}</a>
-                  </td></tr>`
-        )
-        :'<tr><td>No hits in XP</td></tr>';
-      notificationString += '</table>';
-      notificationString = notificationString.replace(',', '');
-      notificationDiv.innerHTML = notificationString;
-      const mainElement = element.parentElement;
-      mainElement.insertBefore(notificationDiv, mainElement.firstChild);
+  function openUserData(userElement) {
+    const emailButtonSpan = userElement.querySelector('span[role=button]');
+  
+    if(emailButtonSpan) {
+      emailButtonSpan.click();
     }
-  );
+  }
+  
+  function getUserData(userElement) {
+    const name = userElement.querySelector('.mb-1').innerText;  
+  
+    const contactDetails = userElement.querySelector('.contact-details-horizontal');
+    const emailDiv = contactDetails.querySelector('.flexible-rigid-baseline');
+  
+    let email;
+  
+    if(emailDiv) {
+      email = emailDiv.title
+    }
+  
+    return {
+      name, 
+      email,
+    }
+  }
+
+  function xpCavalryUrl(user) {
+    return `<a href="https://xp-cavalry-dev.x-team.com/profile/?id=${user.id}">
+      XP Profile: ${user.fullName}: ${user.email}</a>`
+  }
+
+
+
