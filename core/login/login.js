@@ -6,7 +6,7 @@ const setXPLoginToken = token => chrome.storage.sync.get('XPLogin')
 
 
 const doLoginRequest = Core => ({ username, password }) => Core.Request.post
-    ('https://jobs-api-dev.x-team.com/auth/local')
+    ('https://jobs-api.x-team.com/auth/local')
     ()
     ('')
     ({
@@ -20,7 +20,7 @@ const login = Core => getXPLoginToken(Core)
 
 
 const testXPLoginToken = Core => chrome.storage.sync.get('XPLogin')
-    .then(({ XPLogin }) => Core.Request.get('https://jobs-api-dev.x-team.com/users/me')
+    .then(({ XPLogin }) => Core.Request.get('https://jobs-api.x-team.com/users/me')
     (true)
     ()
     ()
