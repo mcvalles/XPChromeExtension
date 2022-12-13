@@ -50,14 +50,16 @@ function findOnXP3(linkedin) {
 };
 
 function findOnXP2(url, element) {
+  if(element) {
     openUserData(element);
-
+    
     var linkedinElems = url.split('/');
     const vanityName = linkedinElems[linkedinElems.length - 1];
     askXP({ 
       linkedinName: vanityName,
       linkedinUrl: url
     }, element);
+  }
 };
 
 function findOnXP() {
@@ -77,11 +79,24 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
       action: 'getUserByLI',
       params: linkedinName,
     },
-    (res) => {
-      const createXPId = `create-xp-${linkedinName.replace(/[^a-zA-Z0-9 ]/g, '')}`;
+    (res) => {  
+      const isUserProfile = !!document.querySelector('.slide-pane__content');
+      let createXPId = `create-xp-${linkedinName.replace(/[^a-zA-Z0-9 ]/g, '')}`;
+
+      createXPId += isUserProfile ? '-user-profile' : '-sourcing-list';
+
+      if(isUserProfile) {
+        const notificationDivs = document.querySelectorAll('div[id*=user-profile]');
+
+        if(notificationDivs.length > 0) {
+          notificationDivs.forEach(notification => {
+            notification.remove();
+          })
+        }
+      }
       
       const notificationDiv = document.createElement('div');
-      notificationDiv.id = 'xpNotification';
+      notificationDiv.id = `xpNotification-${createXPId}`;
       notificationDiv.classList.add("hireEZlink")
       let notificationString = '<table class="xp-profiles">';
       notificationString += !!res.length ?
@@ -104,16 +119,18 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
         if(!res.length) {
           const buttonAddOnXP = document.querySelector(`#${createXPId}`);
           buttonAddOnXP.addEventListener("click", async () => {
-            if(element) {
-              const { name, email } = getUserData(element);
+            if(element || isUserProfile) {
+              const { name, email } = isUserProfile ? 
+                getUserDataFromUserProfile() : 
+                getUserDataFromSourcingList(element);
 
               if(name && email) {
                 const divCreateXp = document.querySelector(`#span-${createXPId}`);
                 divCreateXp.innerText = '';
                 divCreateXp.classList.add('loader');
-          
+                
                 const { XPUserId } = await chrome.storage.sync.get('XPUserId');
-                    
+                
                 const newUserResponse = await chrome.runtime.sendMessage({
                   target: 'hireez',
                   action: 'createNewProfile',
@@ -148,11 +165,30 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
     }
   }
   
-  function getUserData(userElement) {
+  function getUserDataFromSourcingList(userElement) {
     const name = userElement.querySelector('.mb-1').innerText;  
   
     const contactDetails = userElement.querySelector('.contact-details-horizontal');
     const emailDiv = contactDetails.querySelector('.flexible-rigid-baseline');
+  
+    let email;
+  
+    if(emailDiv) {
+      email = emailDiv.title
+    }
+  
+    return {
+      name, 
+      email,
+    }
+  }
+
+  function getUserDataFromUserProfile() {
+    const candidateInfoDiv = document.querySelector('.candidate-profile--basic-info');
+    const name = candidateInfoDiv.querySelector('.mt-2').innerText;
+  
+    const contactDetails = document.querySelector('.contact-details');
+    const emailDiv = contactDetails.querySelector('.flexible-rigid-base');
   
     let email;
   
