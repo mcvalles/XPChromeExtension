@@ -5,7 +5,8 @@ const hireEZObserver = new MutationObserver((mutation) => {
     afterAllCandidatesLoaded();
   }
 
-  if (document.querySelector('.infinite-scroll-component') != null) {
+  if (document.querySelector('.infinite-scroll-component') != null 
+      || document.querySelector('#candidate-profile-container')) {
     //var candidates = document.querySelectorAll('a[title=linkedin]:not(.check)');
     //initialLength = candidates.length; //this is my initial li length items
     afterSourceSearchLoaded();
@@ -80,7 +81,7 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
       params: linkedinName,
     },
     (res) => {  
-      const isUserProfile = !!document.querySelector('.slide-pane__content');
+      const isUserProfile = !!document.querySelector('#candidate-profile-container');
       let createXPId = `create-xp-${linkedinName.replace(/[^a-zA-Z0-9 ]/g, '')}`;
 
       createXPId += isUserProfile ? '-user-profile' : '-sourcing-list';
@@ -120,7 +121,7 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
           const buttonAddOnXP = document.querySelector(`#${createXPId}`);
           buttonAddOnXP.addEventListener("click", async () => {
             if(element || isUserProfile) {
-              const { name, email } = isUserProfile ? 
+              const { name, email, github, location, country } = isUserProfile ? 
                 getUserDataFromUserProfile() : 
                 getUserDataFromSourcingList(element);
 
@@ -130,7 +131,7 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
                 divCreateXp.classList.add('loader');
                 
                 const { XPUserId } = await chrome.storage.sync.get('XPUserId');
-                
+
                 const newUserResponse = await chrome.runtime.sendMessage({
                   target: 'hireez',
                   action: 'createNewProfile',
@@ -139,6 +140,9 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
                     email,
                     linkedinAccount: linkedinUrl,
                     created_origin_user: XPUserId,
+                    githubAccount: github,
+                    country,
+                    location,
                   }
                 })
           
@@ -158,6 +162,7 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
   );
 
   function openUserData(userElement) {
+    // Open email
     const emailButtonSpan = userElement.querySelector('span[role=button]');
   
     if(emailButtonSpan) {
@@ -168,37 +173,99 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
   function getUserDataFromSourcingList(userElement) {
     const name = userElement.querySelector('.mb-1').innerText;  
   
+    // get email
+    let email;
+
     const contactDetails = userElement.querySelector('.contact-details-horizontal');
     const emailDiv = contactDetails.querySelector('.flexible-rigid-baseline');
-  
-    let email;
   
     if(emailDiv) {
       email = emailDiv.title
     }
-  
+
+    // Get location
+    let location;
+    let country
+
+    const userUl = userElement.querySelector('.d-flex, .flex-column, .list-unstyled, .text-gray, .mb-0, .flex-xl-row');
+
+    if(userUl) {
+      const locationIl = userUl.querySelectorAll('.body_1b');
+
+      if(locationIl && locationIl[1]) {
+        location = locationIl[1].innerText
+        country = location.split(',')[2];
+      }
+    }
+
+    // Get github
+    let github;
+
+    const githubLink = userElement.querySelector('a[title=github]');
+
+    if(githubLink) {
+      github = githubLink.href;
+    }
+
+    // Hireez 
+    let hireez;
+
+    const hireezLink = userElement.querySelector('a[title=hireEZ]');
+
+    if(hireezLink) {
+      hireez = hireezLink.href;
+    }
+
     return {
       name, 
       email,
+      location,
+      github,
+      hireez,
+      country,
     }
   }
 
   function getUserDataFromUserProfile() {
     const candidateInfoDiv = document.querySelector('.candidate-profile--basic-info');
     const name = candidateInfoDiv.querySelector('.mt-2').innerText;
-  
+    
+    //Get email
+    let email;
+
     const contactDetails = document.querySelector('.contact-details');
     const emailDiv = contactDetails.querySelector('.flexible-rigid-base');
   
-    let email;
-  
     if(emailDiv) {
       email = emailDiv.title
+    }
+
+    // Get location
+    let location;
+    let country;
+
+    const userUl = document.querySelectorAll('.candidate-profile-basic--current-details');
+
+    if(userUl && userUl[2]) {
+      location = userUl[2].innerText
+      country = location.split(',')[2];
+    }
+
+    // Get github
+    let github;
+
+    const githubLink = document.querySelector('a[title=github]');
+
+    if(githubLink) {
+      github = githubLink.href;
     }
   
     return {
       name, 
       email,
+      github,
+      location,
+      country,
     }
   }
 
