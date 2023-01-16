@@ -1,6 +1,6 @@
 
 const getUserByLI = Core => (message, sender, sendResponse) => Core.Request.get
-    ('https://jobs-api.x-team.com/profiles')
+    ('https://jobs-api-dev.x-team.com/profiles')
     (true)
     (`?linkedinAccount_contains=${message.params}`)
     ()
@@ -8,7 +8,7 @@ const getUserByLI = Core => (message, sender, sendResponse) => Core.Request.get
 
 
 /*const getUserByLI = (Core) => (message, sender, sendResponse) =>
-    Core.Request.get('https://jobs-api.x-team.com/search/quick')(true)(
+    Core.Request.get('https://jobs-api-dev.x-team.com/search/quick')(true)(
         `?value=${message.params}&_limit=10`
     )()(sendResponse);*/
 

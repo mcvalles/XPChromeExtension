@@ -1,4 +1,4 @@
-const path = "https://jobs-api.x-team.com/notes";
+const path = "https://jobs-api-dev.x-team.com/notes";
 
 const _xp_post_notes = (Core) => (_) => (data) => (cb) =>
   Core.Request.post(path)(true)("")(data)(cb);
