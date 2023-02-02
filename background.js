@@ -18,3 +18,9 @@ const messageHandlers = Object.values(modules)
 }, {})
 
 chrome.runtime.onMessage.addListener(Core.handleMessage(messageHandlers))
+
+chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
+  chrome.storage.sync.set({
+    googleAuthToken: token
+  })
+});

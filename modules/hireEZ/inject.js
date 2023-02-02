@@ -1,4 +1,5 @@
 let initialLength = 0;
+const buttonAddText = 'Add on Sheet';
 
 const hireEZObserver = new MutationObserver((mutation) => {
   if (document.querySelector('.talent-pool-list-v4') != null) {
@@ -42,7 +43,7 @@ function findOnXP3(linkedin) {
       var linkedinElems = linkedin.split('/');
       
       const vanityName = linkedinElems[linkedinElems.length - 1];
-      askXP({ 
+      askSpreadsheet({ 
         linkedinName: vanityName,
         linkedinUrl: linkedin
       });
@@ -56,7 +57,7 @@ function findOnXP2(url, element) {
     
     var linkedinElems = url.split('/');
     const vanityName = linkedinElems[linkedinElems.length - 1];
-    askXP({ 
+    askSpreadsheet({ 
       linkedinName: vanityName,
       linkedinUrl: url
     }, element);
@@ -69,10 +70,88 @@ function findOnXP() {
     if (linkedin != null) {
       var linkedinElems = linkedin.href.split('/');
       const vanityName = linkedinElems[linkedinElems.length - 1];
-      askXP({ linkedinName: vanityName });
+      askSpreadsheet({ linkedinName: vanityName });
     }
   }, 2000);
 };
+
+const askSpreadsheet = ({ linkedinName, linkedinUrl }, element) =>
+    chrome.storage.sync.get('spreadsheetLinkedins',
+    ({ spreadsheetLinkedins }) => { 
+      const findLinkedinOnSpreadsheet = spreadsheetLinkedins ? spreadsheetLinkedins.find(sheetLinkedin => 
+        sheetLinkedin === linkedinUrl) : null
+
+      const isUserProfile = !!document.querySelector('#candidate-profile-container');
+      let createXPId = `create-xp-${linkedinName.replace(/[^a-zA-Z0-9 ]/g, '')}`;
+
+      createXPId += isUserProfile ? '-user-profile' : '-sourcing-list';
+
+      if(isUserProfile) {
+        const notificationDivs = document.querySelectorAll('div[id*=user-profile]');
+
+        if(notificationDivs.length > 0) {
+          notificationDivs.forEach(notification => {
+            notification.remove();
+          })
+        }
+      }
+      
+      const notificationDiv = document.createElement('div');
+      notificationDiv.id = `xpNotification-${createXPId}`;
+      notificationDiv.classList.add("hireEZlink")
+      let notificationString = '<table class="xp-profiles">';
+      notificationString += findLinkedinOnSpreadsheet ?
+         `<tr><td>Already added on sheet</td></tr>`
+        :`<tr><td class="createXP" id="no-hits-${createXPId}">Not on Sheet <span>-</span> <button class="create-xp" id="${createXPId}" type="button">
+            <div id="span-${createXPId}">${buttonAddText}</div></button></td></tr>`;
+        notificationString += '</table>';
+        notificationString = notificationString.replace(',', '');
+        notificationDiv.innerHTML = notificationString;
+        const mainElement = element ? element.parentElement 
+          : document.querySelector('.candidate-profile--basic')?.parentElement;
+        
+        if(mainElement) {
+          mainElement.insertBefore(notificationDiv, mainElement.firstChild);
+        }
+
+        if(!findLinkedinOnSpreadsheet) {
+          const buttonAddOnXP = document.querySelector(`#${createXPId}`);
+          buttonAddOnXP.addEventListener("click", async () => {
+            if(element || isUserProfile) {
+              const { name, email } = isUserProfile ? 
+                getUserDataFromUserProfile() : 
+                getUserDataFromSourcingList(element);
+
+              if(name && email) {
+                const divCreateXp = document.querySelector(`#span-${createXPId}`);
+                divCreateXp.innerText = '';
+                divCreateXp.classList.add('loader');
+                
+                const response = await chrome.runtime.sendMessage({
+                  target: 'hireez',
+                  action: 'addUserOnSpreadsheet',
+                  body: {
+                    name,
+                    email,
+                    linkedin: linkedinUrl
+                  }
+                })
+          
+                if(response.success) {
+                  const tdCreateXp = document.querySelector(`#no-hits-${createXPId}`);
+                  tdCreateXp.innerHTML = 'Already added on sheet'
+                } else {
+                  divCreateXp.classList.remove('loader');
+                  divCreateXp.innerText = buttonAddText;
+                }
+
+                alert(response.message)
+              }
+            }
+          });
+        }
+    }
+  );
 
 const askXP = ({ linkedinName, linkedinUrl }, element) =>
   chrome.runtime.sendMessage({
@@ -130,30 +209,40 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
                 divCreateXp.innerText = '';
                 divCreateXp.classList.add('loader');
                 
-                const { XPUserId } = await chrome.storage.sync.get('XPUserId');
+                // const { XPUserId } = await chrome.storage.sync.get('XPUserId');
 
                 const newUserResponse = await chrome.runtime.sendMessage({
                   target: 'hireez',
                   action: 'createNewProfile',
                   body: {
-                    fullName: name,
-                    email,
-                    linkedinAccount: linkedinUrl,
-                    created_origin_user: XPUserId,
-                    githubAccount: github,
-                    country,
-                    location,
+                    // fullName: name,
+                    // email,
+                    // linkedinAccount: linkedinUrl,
+                    // created_origin_user: XPUserId,
+                    // githubAccount: github,
+                    // country,
+                    // location,
                   }
                 })
+
+                // const newUserResponse = await chrome.runtime.sendMessage({
+                //   target: 'hireez',
+                //   action: 'addUserOnSpreadsheet',
+                //   body: {
+                //   }
+                // })
+
+                console.log(newUserResponse);
           
-                if(newUserResponse.id) {
-                  const tdCreateXp = document.querySelector(`#no-hits-${createXPId}`);
-                  tdCreateXp.innerHTML = xpCavalryUrl(newUserResponse)
-                } else {
-                  divCreateXp.classList.remove('loader');
-                  divCreateXp.innerText = 'Create XP';
-                  alert(`There was an error on trying to add ${name} at xp-calvary, please try again.`)
-                }
+                // if(newUserResponse.id) {
+                //   const tdCreateXp = document.querySelector(`#no-hits-${createXPId}`);
+                //   tdCreateXp.innerHTML = xpCavalryUrl(newUserResponse)
+                // } else {
+                //   console.log(newUserResponse);
+                //   divCreateXp.classList.remove('loader');
+                //   divCreateXp.innerText = 'Create XP';
+                //   alert(`There was an error on trying to add ${name} at xp-calvary, please try again.`)
+                // }
               }
             }
           });
