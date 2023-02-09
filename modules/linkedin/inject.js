@@ -36,7 +36,7 @@ const askXP = (linkedinUrl) =>
                 res
                 .map(
                     (p) => `<tr><td>
-                                <a href="https://xp-cavalry.x-team.com/profile/?id=${p.id}">XP Profile: ${p.fullName}: ${p.email}</a>
+                                <a href=" https://xp-cavalry.x-team.com/profile/?id=${p.id}">XP Profile: ${p.fullName}: ${p.email}</a>
                             </td></tr>`
                 )
                 :'<tr><td>No hits in XP</td></tr>';

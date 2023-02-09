@@ -6,7 +6,7 @@ const getUserByLI = Core => (message, sender, sendResponse) => Core.Request.get
     ()
     (sendResponse)
 
-  const createNewProfile = Core => (message, sender, sendResponse) => Core.Request.post
+const createNewProfile = Core => (message, sender, sendResponse) => Core.Request.post
     ('https://jobs-api.x-team.com/profiles')
     (true)
     ()
@@ -24,8 +24,6 @@ const getUserByLI = Core => (message, sender, sendResponse) => Core.Request.get
       const response = await Core.Spreadsheet.addUserOnSpreadsheet({
         ...message.body
       })
-
-      console.log(response);
 
       sendResponse(response)
     }

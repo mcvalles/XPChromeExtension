@@ -1,5 +1,6 @@
 let initialLength = 0;
 const buttonAddText = 'Add on Sheet';
+const xpUrl = ' https://xp-cavalry.x-team.com'
 
 const hireEZObserver = new MutationObserver((mutation) => {
   if (document.querySelector('.talent-pool-list-v4') != null) {
@@ -126,6 +127,18 @@ const askSpreadsheet = ({ linkedinName, linkedinUrl }, element) =>
                 const divCreateXp = document.querySelector(`#span-${createXPId}`);
                 divCreateXp.innerText = '';
                 divCreateXp.classList.add('loader');
+
+                const xpUserResponse = await chrome.runtime.sendMessage({
+                  target: 'hireez',
+                  action: 'getUserByLI',
+                  params: linkedinName,
+                })
+
+                let userProfileUrl;
+
+                if(xpUserResponse?.length > 0) {
+                  userProfileUrl = `${xpUrl}/profile/?id=${xpUserResponse[0].id}`
+                }
                 
                 const response = await chrome.runtime.sendMessage({
                   target: 'hireez',
@@ -133,6 +146,7 @@ const askSpreadsheet = ({ linkedinName, linkedinUrl }, element) =>
                   body: {
                     name,
                     email,
+                    userProfileUrl,
                     linkedin: linkedinUrl
                   }
                 })
@@ -359,7 +373,7 @@ const askXP = ({ linkedinName, linkedinUrl }, element) =>
   }
 
   function xpCavalryUrl(user) {
-    return `<a href="https://xp-cavalry-dev.x-team.com/profile/?id=${user.id}">
+    return `<a href="${xpUrl}/profile/?id=${user.id}">
       XP Profile: ${user.fullName}: ${user.email}</a>`
   }
 

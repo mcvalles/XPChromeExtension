@@ -24,7 +24,7 @@
     "type": "module"
   },
   "oauth2": {
-    "client_id": "527777493268-uh1akjm0hrak11drg9j4kjq4reodokmq.apps.googleusercontent.com",
+    "client_id": "791818692113-47nc11o2fo775lj4gjs2ra65p65k7pao.apps.googleusercontent.com",
     "scopes": ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
   },
   "content_scripts": [

@@ -121,7 +121,7 @@ const addUserOnSpreadsheet = async data => {
 
   const { googleAuthToken } = await chrome.storage.sync.get('googleAuthToken')
   
-  const { name, email, linkedin } = data
+  const { name, email, userProfileUrl, linkedin } = data
 
   const index = await getNextEmptyIndex({ spreadsheetId, token: googleAuthToken})
   const row = index + 1;
@@ -131,7 +131,7 @@ const addUserOnSpreadsheet = async data => {
       [ 
         name, // A
         email, // B
-        '', // C
+        userProfileUrl || '', // C
         linkedin, // D 
         '', // E
         '', // F
