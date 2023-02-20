@@ -1,7 +1,7 @@
 {
   "name": "xp-extension",
   "description": "Chrome Extension for XP",
-  "version": "2.2.1",
+  "version": "2.2.3",
   "manifest_version": 3,
   "icons": {
     "16": "x-icon.png",
@@ -17,11 +17,15 @@
     "default_title": "Email Template Extension"
   },
   "options_page": "options/options.html",
-  "permissions": ["background", "storage", "clipboardWrite"],
-  "host_permissions": ["https://*.x-team.com/*", "https://*.linkedin.com/*"],
+  "permissions": ["<all_urls>", "background", "storage", "clipboardWrite", "identity"],
+  "host_permissions": ["https://*.x-team.com/*", "https://*.linkedin.com/*", "https://*.google.com/*"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
+  },
+  "oauth2": {
+    "client_id": "791818692113-47nc11o2fo775lj4gjs2ra65p65k7pao.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
   },
   "content_scripts": [
     {

@@ -6,7 +6,7 @@ const getUserByLI = Core => (message, sender, sendResponse) => Core.Request.get
     ()
     (sendResponse)
 
-  const createNewProfile = Core => (message, sender, sendResponse) => Core.Request.post
+const createNewProfile = Core => (message, sender, sendResponse) => Core.Request.post
     ('https://jobs-api.x-team.com/profiles')
     (true)
     ()
@@ -19,6 +19,15 @@ const getUserByLI = Core => (message, sender, sendResponse) => Core.Request.get
     })
     (sendResponse)
 
+
+    const addUserOnSpreadsheet = Core => async (message, sender, sendResponse) => {
+      const response = await Core.Spreadsheet.addUserOnSpreadsheet({
+        ...message.body
+      })
+
+      sendResponse(response)
+    }
+
 /*const getUserByLI = (Core) => (message, sender, sendResponse) =>
     Core.Request.get('https://jobs-api.x-team.com/search/quick')(true)(
         `?value=${message.params}&_limit=10`
@@ -28,6 +37,7 @@ export default (Core) => ({
     module: 'HireEZ',
     messageHandlers: {
         getUserByLI,
-        createNewProfile
+        createNewProfile,
+        addUserOnSpreadsheet
     },
 });

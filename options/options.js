@@ -7,6 +7,9 @@ const XPLogin = {
 chrome.storage.sync.get(['save'], (res) => {
   save = res ?? '';
   console.log(save);
+
+  if (save.save.spreadsheet)
+    document.getElementById('spreadsheet').value = save.save.spreadsheet;
 });
 
 chrome.storage.sync.get('XPLogin', (res) => {
@@ -72,6 +75,11 @@ document.addEventListener('DOMContentLoaded', function () {
   //FAQ link OnChange
   document.getElementById('faq').addEventListener('change', saveFaq);
 
+  //Spreadsheet link OnChange
+  document
+    .getElementById('spreadsheet')
+    .addEventListener('change', saveSpreadsheet);
+
   //Select First Tab by Default
   mainTabs[0].click();
   emailTabs[0].click();
@@ -111,6 +119,15 @@ function saveFaq() {
 
   chrome.storage.sync.set({ save }, () => {
     console.log(`FAQ link is set to ${save['faq']}`);
+  });
+}
+
+//Spreadsheet link OnChange  ---------------------------------------------------------
+function saveSpreadsheet() {
+  save['spreadsheet'] = this.value;
+
+  chrome.storage.sync.set({ save }, () => {
+    console.log(`Spreadsheet link is set to ${save['spreadsheet']}`);
   });
 }
 
